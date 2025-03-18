@@ -1,6 +1,7 @@
 'use client';
 
-import { LiveKitRoom, VideoConference, setLogLevel } from '@livekit/components-react';
+import "@livekit/components-styles";
+import { LiveKitRoom, RoomAudioRenderer, VideoConference, setLogLevel, useVoiceAssistant, BarVisualizer, VoiceAssistantControlBar } from '@livekit/components-react';
 import type { NextPage } from 'next';
 import { generateRandomUserId } from '../lib/helper';
 import { useState, useEffect, useMemo } from 'react';
@@ -62,39 +63,28 @@ const MinimalExample: NextPage = () => {
       background: 'linear-gradient(135deg, #0f0c29 0%, #1a1a2e 100%)',
       color: '#ffffff'
     }}>
-      <LiveKitRoom
-        video={false}
-        audio={false}
-        token={token}
-        serverUrl={process.env.NEXT_PUBLIC_LK_SERVER_URL}
-        onMediaDeviceFailure={(e) => {
-          console.error(e);
-          alert(
-            'Error acquiring camera or microphone permissions. Please make sure you grant the necessary permissions in your browser and reload the tab',
-          );
-        }}
-        style={{
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <div style={{
-          width: '100%',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '2rem',
-          borderRadius: '16px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-          background: 'rgba(255, 255, 255, 0.05)',
-          backdropFilter: 'blur(12px)'
-        }}>
-          <VideoConference />
-        </div>
-      </LiveKitRoom>
+    <LiveKitRoom
+      token={token}
+      serverUrl={process.env.NEXT_PUBLIC_LK_SERVER_URL}
+      connect={true}
+      audio={true}
+    >
+      <SimpleVoiceAssistant />
+      <VoiceAssistantControlBar />
+      <RoomAudioRenderer />
+    </LiveKitRoom>
     </div>
   );
 };
+
+function SimpleVoiceAssistant() {
+  const { state, audioTrack } = useVoiceAssistant();
+  return (
+    <div className="h-80">
+      <BarVisualizer state={state} barCount={5} trackRef={audioTrack} style={{}} />
+      <p className="text-center">{state}</p>
+    </div>
+  );
+}
 
 export default MinimalExample;
