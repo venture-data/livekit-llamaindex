@@ -1,11 +1,13 @@
 'use client';
 
-import { LiveKitRoom, useToken, VideoConference, setLogLevel } from '@livekit/components-react';
+import { LiveKitRoom, VideoConference, setLogLevel } from '@livekit/components-react';
 import type { NextPage } from 'next';
 import { generateRandomUserId } from '../lib/helper';
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 const MinimalExample: NextPage = () => {
+  const [token, setToken] = useState<string | null>(null); // State for storing the token
+
   const params = typeof window !== 'undefined' ? new URLSearchParams(location.search) : null;
   const roomName = params?.get('room') ?? 'test-room';
   setLogLevel('info', { liveKitClientLogLevel: 'warn' });
@@ -20,7 +22,20 @@ const MinimalExample: NextPage = () => {
     };
   }, []);
 
-  const token = useToken(process.env.NEXT_PUBLIC_LK_TOKEN_ENDPOINT, roomName, tokenOptions);
+  // Fetch the token using useEffect
+  useEffect(() => {
+    const fetchToken = async () => {
+      const response = await fetch('http://localhost:3000/api/token'); // Adjust the endpoint if needed
+      const data = await response.json();
+      setToken(data.accessToken); // Set the token in state
+    };
+
+    fetchToken();
+  }, []); // Empty dependency array ensures it runs once on mount
+
+  if (!token) {
+    return <div>Loading...</div>; // Optional loading state while token is being fetched
+  }
 
   return (
     <div data-lk-theme="default" style={{ height: '100vh' }}>
