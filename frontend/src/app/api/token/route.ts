@@ -1,34 +1,30 @@
 import { generateRandomAlphanumeric } from "@/lib/util";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 import type { AccessTokenOptions, VideoGrant } from "livekit-server-sdk";
 import { AccessToken } from "livekit-server-sdk";
 import { TokenResult } from "@/lib/types";
 
-
 const apiKey = process.env.LK_API_KEY;
 const apiSecret = process.env.LK_API_SECRET;
 
+// Function to create the token
 const createToken = (userInfo: AccessTokenOptions, grant: VideoGrant) => {
   const at = new AccessToken(apiKey, apiSecret, userInfo);
   at.addGrant(grant);
   return at.toJwt();
 };
 
-export async function handleToken(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export async function GET() {
   try {
     if (!apiKey || !apiSecret) {
-      res.statusMessage = "Environment variables aren't set up correctly";
-      res.status(500).end();
-      return;
+      return new NextResponse(
+        "Environment variables aren't set up correctly",
+        { status: 500 }
+      );
     }
 
-    const roomName = `cartesia-${generateRandomAlphanumeric(
-      4
-    )}-${generateRandomAlphanumeric(4)}`;
+    const roomName = `cartesia-${generateRandomAlphanumeric(4)}-${generateRandomAlphanumeric(4)}`;
     const identity = `user-${generateRandomAlphanumeric(4)}`;
 
     const grant: VideoGrant = {
@@ -40,15 +36,15 @@ export async function handleToken(
       canUpdateOwnMetadata: true,
     };
 
+    // Create the token
     const token = await createToken({ identity }, grant);
     const result: TokenResult = {
       identity,
       accessToken: token,
     };
 
-    res.status(200).json(result);
+    return NextResponse.json(result, { status: 200 });
   } catch (e) {
-    res.statusMessage = (e as Error).message;
-    res.status(500).end();
+    return new NextResponse((e as Error).message, { status: 500 });
   }
 }
