@@ -88,19 +88,6 @@
    - You see exactly which snippets were retrieved for each user query and how they get merged into the prompt.  
    - **Trade-off**: This is more manual “prompt engineering” overhead. You gain maximum control but at the cost of more complexity.  
 
----
-
-## 4. `README.md`
-
-- Summarizes the purpose and the trade-offs of each script:
-  1. **`chat_engine.py`** is the simplest, integrated approach with LlamaIndex’s built-in chat engine.  
-  2. **`query_engine.py`** allows function calling, making it more flexible but slightly more complex.  
-  3. **`retrieval.py`** does the entire retrieval flow manually, giving you the most control (and complexity) in how context is injected.  
-
-The **recommended** approach (according to the README) is **`query_engine.py`**, because it strikes a good balance of control, customizability, and ease of use, especially if you want to incorporate custom function calling or extra logic in your pipeline.
-
----
-
 ## Common Elements
 
 1. **Data Reading & Index Building**  
