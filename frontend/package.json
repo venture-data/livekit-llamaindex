@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@livekit/components-react": "workspace:*",
+    "@livekit/components-react": "^2.8.0",
     "@livekit/components-styles": "workspace:*",
     "@livekit/track-processors": "^0.3.2",
     "livekit-client": "catalog:",
