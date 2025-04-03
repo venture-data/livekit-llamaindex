@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm
 from livekit.agents.pipeline import VoicePipelineAgent
-from livekit.plugins import deepgram, openai, silero
+from livekit.plugins import deepgram, openai, silero, uplift
 from llama_index.core import (
     SimpleDirectoryReader,
     StorageContext,
@@ -51,7 +51,7 @@ async def entrypoint(ctx: JobContext):
         vad=silero.VAD.load(),
         stt=deepgram.STT(),
         llm=openai.LLM(),
-        tts=openai.TTS(),
+        tts=uplift.TTS(),
         chat_ctx=initial_ctx,
         fnc_ctx=fnc_ctx,
     )
