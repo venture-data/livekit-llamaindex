@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm
 from livekit.agents.pipeline import VoicePipelineAgent
-from livekit.plugins import deepgram, openai, silero
+from livekit.plugins import deepgram, openai, silero, uplift
 from llama_index.core import (
     SimpleDirectoryReader,
     StorageContext,
@@ -33,7 +33,7 @@ async def entrypoint(ctx: JobContext):
         role="system",
         content=(
             "You are a voice assistant created by LiveKit. Your interface with users will be voice. "
-            "You should use short and concise responses, and avoiding usage of unpronouncable punctuation."
+            "You should use short and concise responses, and avoid using unpronounceable punctuation."
         ),
     )
     initial_ctx = llm.ChatContext()
@@ -61,7 +61,7 @@ async def entrypoint(ctx: JobContext):
         vad=silero.VAD.load(),
         stt=deepgram.STT(),
         llm=openai.LLM(),
-        tts=openai.TTS(),
+        tts=uplift.TTS(),  # using the uplift TTS plugin here
         chat_ctx=initial_ctx,
         will_synthesize_assistant_reply=_will_synthesize_assistant_reply,
     )
