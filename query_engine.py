@@ -50,9 +50,9 @@ async def entrypoint(ctx: JobContext):
 
     assistant = VoicePipelineAgent(
         vad=silero.VAD.load(),
-        stt=deepgram.STT(),
+        stt=openai.STT(language="ur"),
         llm=openai.LLM(),
-        tts=uplift.TTS(),
+        tts=uplift.TTS(voice="v_30s70t3a"),
         chat_ctx=initial_ctx,
         fnc_ctx=fnc_ctx,
     )
