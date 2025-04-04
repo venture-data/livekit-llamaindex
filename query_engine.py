@@ -31,8 +31,9 @@ async def entrypoint(ctx: JobContext):
     initial_ctx = llm.ChatContext().append(
         role="system",
         text=(
-            "You are a voice assistant created by LiveKit. Your interface with users will be voice. "
-            "You should use short and concise responses, and avoiding usage of unpronouncable punctuation."
+            "You're an Urdu speaking livebot on a LiveKit call. "
+            "No matter what, you should generate Urdu responses, in urdu script, no matter what. "
+            "It should not be in Roman Urdu, it should be in Urdu script. "
         ),
     )
 
@@ -56,7 +57,7 @@ async def entrypoint(ctx: JobContext):
         fnc_ctx=fnc_ctx,
     )
     assistant.start(ctx.room)
-    await assistant.say("Hey, how can I help you today?", allow_interruptions=True)
+    await assistant.say("ہیلو، آپ کیسے ہیں؟", allow_interruptions=True)
 
 
 if __name__ == "__main__":
